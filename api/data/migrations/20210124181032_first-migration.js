@@ -1,6 +1,6 @@
 exports.up = async knex => {
   await knex.schema
-
+  
     .createTable('brands', brands => {
       brands.increments('brand_id');
 
@@ -15,7 +15,36 @@ exports.up = async knex => {
 
     .createTable('countries', countries => {
       countries.increments('country_id');
-      countries.string('country_name');
+      countries.string('country_name')
+      .unique()
+      .notNullable();
+      countries.string('country_name_abreviation')
+      .unique()
+      .notNullable();
+
+      countries.timestamps('created_at').defaultTo(knex.fn.now());
+      countries.timestamps('modified_at').defaultTo(knex.fn.now());
+    })
+
+    .createTable('colors', colors => {
+      colors.increments('color_id');
+      colors.string('color_name')
+      .notNullable()
+      .unique();
+      colors.string('color_description');
+
+      colors.timestamps('created_at').defaultTo(knex.fn.now());
+      colors.timestamps('modified_at').defaultTo(knex.fn.now());
+    })
+
+    .createTable('genders', genders => {
+      genders.increments('gender_id');
+      genders.string('gender_name')
+        .unique()
+        .notNullable();
+
+      genders.timestamps('created_at').defaultTo(knex.fn.now());
+      genders.timestamps('modified_at').defaultTo(knex.fn.now());
     })
 
     .createTable('shoe_sizes', shoe_sizes => {
@@ -28,6 +57,16 @@ exports.up = async knex => {
         .inTable('countries')
         .onUpdate('CASCADE')
         .onDelete('RESTRICT');
+      shoe_sizes.integer('gender_id')
+        .unsigned()
+        .notNullable()
+        .references('gender_id')
+        .inTable('genders')
+        .onUpdate('CASCADE')
+        .onDelete('RESTRICT');
+
+      shoe_sizes.timestamps('created_at').defaultTo(knex.fn.now());
+      shoe_sizes.timestamps('modified_at').defaultTo(knex.fn.now());
     })
     
     .createTable('shoe_styles', shoe_styles => {
@@ -69,17 +108,6 @@ exports.up = async knex => {
       shoes.timestamps('created_at').defaultTo(knex.fn.now());
       shoes.timestamps('modified_at').defaultTo(knex.fn.now());
     })
-
-    .createTable('discounts', discounts => {
-      discounts.increments('discount_id');
-      discounts.string('discount_name')
-        .notNullable()
-        .unique();
-      discounts.string('discount_description');
-      discounts.decimal('discount_amount')
-        .notNullable()
-        .unique();
-    })
     
     .createTable('shoe_inventory', shoe_inventory => {
       shoe_inventory.increments('shoe_inventory_id');
@@ -87,14 +115,6 @@ exports.up = async knex => {
         .notNullable();
       shoe_inventory.decimal('shoe_inventory_price')
         .notNullable();
-      shoe_inventory.integer('discount_id')
-        .unsigned()
-        .notNullable()
-        .references('discount_id')
-        .inTable('discounts')
-        .onUpdate('CASCADE')
-        .onDelete('RESTRICT');
-
       shoe_inventory.integer('shoe_id')
         .unsigned()
         .notNullable()
@@ -102,12 +122,25 @@ exports.up = async knex => {
         .inTable('shoes')
         .onUpdate('CASCADE')
         .onDelete('RESTRICT');
-      
       shoe_inventory.integer('shoe_size_id')
         .unsigned()
         .notNullable()
         .references('shoe_size_id')
         .inTable('shoe_sizes')
+        .onUpdate('CASCADE')
+        .onDelete('RESTRICT');
+      shoe_inventory.integer('gender_id')
+        .unsigned()
+        .notNullable()
+        .references('gender_id')
+        .inTable('genders')
+        .onUpdate('CASCADE')
+        .onDelete('RESTRICT');
+      shoe_inventory.integer('color_id')
+        .unsigned()
+        .notNullable()
+        .references('color_id')
+        .inTable('colors')
         .onUpdate('CASCADE')
         .onDelete('RESTRICT');
 
@@ -121,6 +154,12 @@ exports.up = async knex => {
         .notNullable();
       images.string('image_alt');
       images.string('image_title');
+      images.string('image_name')
+        .unique()
+        .notNullable();
+
+      images.timestamps('created_at').defaultTo(knex.fn.now());
+      images.timestamps('modified_at').defaultTo(knex.fn.now());
     })
     
     .createTable('shoe_images', shoe_images => {
@@ -139,9 +178,21 @@ exports.up = async knex => {
         .inTable('shoe_inventory')
         .onUpdate('CASCADE')
         .onDelete('RESTRICT');
+        
+      shoe_images.timestamps('created_at').defaultTo(knex.fn.now());
+      shoe_images.timestamps('modified_at').defaultTo(knex.fn.now());
     })
 }
 
 exports.down = async (knex) => {
-  await knex.schema.dropTableIfExists('users')
+  await knex.schema.dropTableIfExists('shoe_images')
+  await knex.schema.dropTableIfExists('images')
+  await knex.schema.dropTableIfExists('shoe_inventory')
+  await knex.schema.dropTableIfExists('shoes')
+  await knex.schema.dropTableIfExists('shoe_styles')
+  await knex.schema.dropTableIfExists('shoe_sizes')
+  await knex.schema.dropTableIfExists('genders')
+  await knex.schema.dropTableIfExists('colors')
+  await knex.schema.dropTableIfExists('countries')
+  await knex.schema.dropTableIfExists('brands')
 }
