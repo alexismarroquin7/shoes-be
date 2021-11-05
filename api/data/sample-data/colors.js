@@ -12,3 +12,4 @@ const colors = [
     color_name: "blue"
   },
 ]
+module.exports = colors;
