@@ -9,8 +9,8 @@ exports.up = async knex => {
       
       brands.string('brand_description');
       
-      brands.timestamps('created_at').defaultTo(knex.fn.now());
-      brands.timestamps('modified_at').defaultTo(knex.fn.now());
+      brands.timestamp('created_at').defaultTo(knex.fn.now());
+      brands.timestamp('modified_at').defaultTo(knex.fn.now());
     })
 
     .createTable('countries', countries => {
@@ -22,8 +22,8 @@ exports.up = async knex => {
       .unique()
       .notNullable();
 
-      countries.timestamps('created_at').defaultTo(knex.fn.now());
-      countries.timestamps('modified_at').defaultTo(knex.fn.now());
+      countries.timestamp('created_at').defaultTo(knex.fn.now());
+      countries.timestamp('modified_at').defaultTo(knex.fn.now());
     })
 
     .createTable('colors', colors => {
@@ -33,8 +33,8 @@ exports.up = async knex => {
       .unique();
       colors.string('color_description');
 
-      colors.timestamps('created_at').defaultTo(knex.fn.now());
-      colors.timestamps('modified_at').defaultTo(knex.fn.now());
+      colors.timestamp('created_at').defaultTo(knex.fn.now());
+      colors.timestamp('modified_at').defaultTo(knex.fn.now());
     })
 
     .createTable('genders', genders => {
@@ -43,8 +43,8 @@ exports.up = async knex => {
         .unique()
         .notNullable();
 
-      genders.timestamps('created_at').defaultTo(knex.fn.now());
-      genders.timestamps('modified_at').defaultTo(knex.fn.now());
+      genders.timestamp('created_at').defaultTo(knex.fn.now());
+      genders.timestamp('modified_at').defaultTo(knex.fn.now());
     })
 
     .createTable('shoe_sizes', shoe_sizes => {
@@ -65,8 +65,8 @@ exports.up = async knex => {
         .onUpdate('CASCADE')
         .onDelete('RESTRICT');
 
-      shoe_sizes.timestamps('created_at').defaultTo(knex.fn.now());
-      shoe_sizes.timestamps('modified_at').defaultTo(knex.fn.now());
+      shoe_sizes.timestamp('created_at').defaultTo(knex.fn.now());
+      shoe_sizes.timestamp('modified_at').defaultTo(knex.fn.now());
     })
     
     .createTable('shoe_styles', shoe_styles => {
@@ -77,8 +77,8 @@ exports.up = async knex => {
       
       shoe_styles.string('shoe_style_description');
       
-      shoe_styles.timestamps('created_at').defaultTo(knex.fn.now());
-      shoe_styles.timestamps('modified_at').defaultTo(knex.fn.now());
+      shoe_styles.timestamp('created_at').defaultTo(knex.fn.now());
+      shoe_styles.timestamp('modified_at').defaultTo(knex.fn.now());
     })
 
     .createTable('shoes', shoes => {
@@ -105,8 +105,8 @@ exports.up = async knex => {
         .onUpdate('CASCADE')
         .onDelete('RESTRICT');
       
-      shoes.timestamps('created_at').defaultTo(knex.fn.now());
-      shoes.timestamps('modified_at').defaultTo(knex.fn.now());
+      shoes.timestamp('created_at').defaultTo(knex.fn.now());
+      shoes.timestamp('modified_at').defaultTo(knex.fn.now());
     })
     
     .createTable('shoe_inventory', shoe_inventory => {
@@ -144,8 +144,8 @@ exports.up = async knex => {
         .onUpdate('CASCADE')
         .onDelete('RESTRICT');
 
-      shoe_inventory.timestamps('created_at').defaultTo(knex.fn.now());
-      shoe_inventory.timestamps('modified_at').defaultTo(knex.fn.now());
+      shoe_inventory.timestamp('created_at').defaultTo(knex.fn.now());
+      shoe_inventory.timestamp('modified_at').defaultTo(knex.fn.now());
     })
 
     .createTable('images', images => {
@@ -158,8 +158,8 @@ exports.up = async knex => {
         .unique()
         .notNullable();
 
-      images.timestamps('created_at').defaultTo(knex.fn.now());
-      images.timestamps('modified_at').defaultTo(knex.fn.now());
+      images.timestamp('created_at').defaultTo(knex.fn.now());
+      images.timestamp('modified_at').defaultTo(knex.fn.now());
     })
     
     .createTable('shoe_images', shoe_images => {
@@ -179,8 +179,8 @@ exports.up = async knex => {
         .onUpdate('CASCADE')
         .onDelete('RESTRICT');
         
-      shoe_images.timestamps('created_at').defaultTo(knex.fn.now());
-      shoe_images.timestamps('modified_at').defaultTo(knex.fn.now());
+      shoe_images.timestamp('created_at').defaultTo(knex.fn.now());
+      shoe_images.timestamp('modified_at').defaultTo(knex.fn.now());
     })
 }
 
