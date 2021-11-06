@@ -2,13 +2,7 @@ const db = require('../data/db-config');
 
 const getUniqueValues = (array, cb) => {
   return [...new Set(array.map(cb))];
-}
-
-// const createObjectKeysFromArrayValues = (arr, defaultValue) => {
-//   return arr.reduce((acc,curr) => {
-//     return acc[curr]=defaultValue, acc;
-//   }, {});
-// }
+};
 
 const findAll = async () => {
   const shoe_inventory = await db('shoe_inventory as sh_inv')
