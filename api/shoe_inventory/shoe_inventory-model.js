@@ -119,6 +119,13 @@ const findAll = async () => {
       acc.shoe.style.gender.created_at = curr.shoe_inventory_gender_created_at;
       acc.shoe.style.gender.modified_at = curr.shoe_inventory_gender_modified_at;
       
+      // color
+      acc.shoe.style.color.color_id = curr.color_id;
+      acc.shoe.style.color.name = curr.color_name;
+      acc.shoe.style.color.description = curr.color_description;
+      acc.shoe.style.color.created_at = curr.color_created_at;
+      acc.shoe.style.color.modified_at = curr.color_modified_at;
+      
       // shoe_size
       acc.shoe.size.shoe_size_id = curr.shoe_size_id; // id
       acc.shoe.size.amount = curr.shoe_size_amount; // amount
@@ -162,7 +169,7 @@ const findAll = async () => {
       shoe: {
         brand: {},
         size: { country: {}, gender: {} },
-        style: { gender: {} },
+        style: { gender: {}, color: {} },
         images: []
       }
     }
