@@ -4,7 +4,7 @@ const getUniqueValues = (array, cb) => {
   return [...new Set(array.map(cb))];
 };
 
-const findAll = async () => {
+const findAll = async query => {
   const shoe_inventory = await db('shoe_inventory as sh_inv')
   .leftJoin('shoes as s', 's.shoe_id', 'sh_inv.shoe_id')
   .leftJoin('brands as b', 'b.brand_id', 's.brand_id')
@@ -87,7 +87,7 @@ const findAll = async () => {
 
   const uniqueShoeInventoryIds = getUniqueValues(shoe_inventory, item => item.shoe_inventory_id);
 
-  const rows = uniqueShoeInventoryIds.map(unique_shoe_inventory_id => {
+  let rows = uniqueShoeInventoryIds.map(unique_shoe_inventory_id => {
     const matchingShoeInventoryIds = shoe_inventory.filter(shoe_inv => {
       return shoe_inv.shoe_inventory_id === unique_shoe_inventory_id
     });
@@ -175,11 +175,23 @@ const findAll = async () => {
     }
 
     const shoe_inventory_item_model = matchingShoeInventoryIds.reduce(matchingShoeInventoryIdsReducer, model);
-
+    
+    
     return shoe_inventory_item_model;
   });
+  
+  if(
+    rows === null ||
+    !Array.isArray(rows)
+  ){
+    return null;
+  }
 
-  return rows;
+  if(query && query.shoe_id){
+    rows = rows.filter(shoe_inv => shoe_inv.shoe.shoe_id === Number(query.shoe_id))
+  }
+
+  return rows.length > 0 ? rows : null;
 }
 
 const findById = async shoe_inventory_id => {
