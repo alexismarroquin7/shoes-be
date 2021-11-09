@@ -17,4 +17,4 @@ server.get('/', (req, res, next) => { // eslint-disable-line
   });
 });
 
-module.exports = server
+module.exports = server;
