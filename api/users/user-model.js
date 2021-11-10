@@ -130,8 +130,19 @@ const findBy = async filter => {
   }
 };
 
-const create = async user => {
-  return null;
+const create = async ({ username, email, role, password }) => {
+  // find role_id
+
+  const role = await db('roles as r')
+
+  const model = {
+    username,
+    email,
+    role,
+    password
+  };
+
+  const user = await db('users as u').insert();
 };
 
 module.exports = {

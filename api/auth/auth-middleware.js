@@ -59,8 +59,25 @@ const handleJsonWebToken = (req, res, next) => {
   }
 };
 
+const handlePasswordHash = (req, res, next) => {
+  const { password } = req.body;
+  try {
+    const rounds = Number(process.env.HASH_ROUNDS) || 8;
+    const hash = bcrypt.hashSync(password, rounds);
+    if(hash){
+      req.hash = hash;
+      next();
+    } else {
+      next({ status: 500, message: "an error occured while hashing password" })
+    }
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   validateLoginCredentials,
   restricted,
-  handleJsonWebToken
+  handleJsonWebToken,
+  handlePasswordHash
 }

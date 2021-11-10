@@ -29,6 +29,8 @@ const validateNewUserModel = (req,res,next) => {
 
   if(!username||!password||!email||!role){
     next({ status: 400, message: "username, password, email, and role are all required" });
+  } else if(role !== 'user' || role !== 'admin') {
+    next({ status: 400, message: "role must equal 'user' or 'admin'" });
   } else {
     next();
   }

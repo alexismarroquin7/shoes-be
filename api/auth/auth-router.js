@@ -1,23 +1,23 @@
 const router = require('express').Router();
-// const bcrypt = require('bcryptjs');
-const { validateLoginCredentials , handleJsonWebToken } = require('./auth-middleware');
+const User = require('../users/user-model');
+const {
+  validateLoginCredentials,
+  handleJsonWebToken,
+  handlePasswordHash 
+} = require('./auth-middleware');
+const {
+  validateNewUserModel,
+  validateEmailUnique 
+} = require('../users/user-middleware');
 
-router.post('/register', async (req, res, next) => {
-  // const { username, password } = req.body;
-
-  // const rounds = process.env.DB_ROUNDS 
-  // ? Number(process.env.DB_ROUNDS) 
-  // : 8;
-
-  // const hash = bcrypt.hashSync(password, rounds);
-
-  // try {
-  //   const user = await User.create({ username, password: hash });
-  //   res.status(201).json(user);
-  // } catch(err) {
-  //   next(err);
-  // }
-  res.end();
+router.post('/register', validateNewUserModel, validateEmailUnique, handlePasswordHash, async (req, res, next) => {
+  const { username, email, role } = req.body;
+  try {
+    const user = await User.create({ username, email, role, password: req.hash });
+    res.status(201).json(user);
+  } catch(err) {
+    next(err);
+  }
 });
 
 router.post('/login', validateLoginCredentials, handleJsonWebToken, async (req, res, next) => {
