@@ -148,9 +148,41 @@ const create = async ({ username, email, roleName, password }) => {
   return findById(user.user_id);
 };
 
+const updateById = async (changes, user_id) => {
+  const oldUser = await findById(user_id);
+  const [ role ] = await Role.findBy({ role_name: changes.role });
+  const model = {
+    username: changes.username,
+    email: changes.email,
+    email_confirmed: changes.email_confirmed ? boolToInt(changes.email_confirmed) : oldUser.email_confirmed,
+    password: changes.password,
+    role_id: role.role_id,
+    created_at: oldUser.created_at,
+    modified_at: db.fn.now()
+  };
+  await db('users as u').where({ user_id }).update(model);
+  return findById(user_id);
+};
+
+const deleteById = async user_id => {
+  const userToDelete = await findById(user_id);
+
+  await db.transaction(async trx => {
+    await trx('user_payments as up').where({ user_id }).delete();
+    await trx('user_adresses as ua').where({ user_id }).delete();
+    await trx('users as u').where({ user_id }).delete();
+  });
+
+  const deletedUser = userToDelete;
+
+  return deletedUser;
+};
+
 module.exports = {
   findAll,
   findById,
+  deleteById,
   findBy,
-  create
+  create,
+  updateById
 }
