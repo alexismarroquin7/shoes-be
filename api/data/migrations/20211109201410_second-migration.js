@@ -8,6 +8,8 @@ exports.up = async knex => {
     .notNullable()
     .unique();
     roles.string('role_description');
+    roles.timestamp('created_at').defaultTo(knex.fn.now());
+    roles.timestamp('modified_at').defaultTo(knex.fn.now());
   })
 
   .createTable('users', users => {
