@@ -8,7 +8,11 @@ const shoe_images = require('./shoe_images');
 const shoe_inventory = require('./shoe_inventory');
 const genders = require('./genders');
 const colors = require('./colors');
-module.exports={
+const roles = require('./roles');
+const users = require('./users');
+const user_adresses = require('./user_adresses');
+const user_payments = require('./user_payments');
+module.exports = {
   brands,
   countries,
   shoes,
@@ -18,5 +22,9 @@ module.exports={
   shoe_images,
   shoe_inventory,
   genders,
-  colors
-}
+  colors,
+  roles,
+  users,
+  user_adresses,
+  user_payments
+};
