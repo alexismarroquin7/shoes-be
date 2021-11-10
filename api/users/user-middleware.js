@@ -41,12 +41,21 @@ const validateEmailUnique = async (req, res, next) => {
   try {
     const [ user ] = await User.findBy({ email });
     if(user){
-      next();
+      if(
+        !req.params.user_id || 
+        (req.params.user_id && user.user_id !== Number(req.params.user_id))
+      ){
+        next({
+          status: 400,
+          message: `${email} already has an account registered`
+        });
+      } else {
+        // email is taken by same user
+        next();
+      }
     } else {
-      next({
-        status: 400,
-        message: `${email} already has an account registered`
-      });
+      // email is not taken
+      next();
     }
   } catch (err) {
     next(err);
