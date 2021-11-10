@@ -1,5 +1,6 @@
 const db = require('../data/db-config');
-const { intToBool } = require('../../utils');
+const Role = require('../roles/role-model');
+const { intToBool, boolToInt } = require('../../utils');
 
 const findAll = async () => {
   const rows = await db('users as u')
@@ -130,19 +131,21 @@ const findBy = async filter => {
   }
 };
 
-const create = async ({ username, email, role, password }) => {
+const create = async ({ username, email, roleName, password }) => {
   // find role_id
-
-  const role = await db('roles as r')
+  const [ role ] = await Role.findBy({ role_name: roleName });
 
   const model = {
     username,
     email,
-    role,
+    email_confirmed: boolToInt(false),
+    role_id: role.role_id,
     password
   };
 
-  const user = await db('users as u').insert();
+  const user = await db('users as u').insert(model, ['u.user_id']);
+  console.log('./user-model', user)
+  return findById(user.user_id);
 };
 
 module.exports = {
