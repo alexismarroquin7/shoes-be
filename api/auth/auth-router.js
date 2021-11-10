@@ -1,57 +1,35 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
-const { generateToken } = require('../../utils');
+const { validateLoginCredentials , handleJsonWebToken } = require('./auth-middleware');
 
 router.post('/register', async (req, res, next) => {
-  const { username, password } = req.body;
+  // const { username, password } = req.body;
 
-  const rounds = process.env.DB_ROUNDS 
-    ? Number(process.env.DB_ROUNDS) 
-    : 8;
+  // const rounds = process.env.DB_ROUNDS 
+  // ? Number(process.env.DB_ROUNDS) 
+  // : 8;
 
-  const hash = bcrypt.hashSync(password, rounds);
+  // const hash = bcrypt.hashSync(password, rounds);
 
-  try {
-    // const user = await User.create({ username, password: hash });
-    res.status(201).json(user);
-  } catch(err) {
-    next(err);
-  }
+  // try {
+  //   const user = await User.create({ username, password: hash });
+  //   res.status(201).json(user);
+  // } catch(err) {
+  //   next(err);
+  // }
+  res.end();
 });
 
-router.post('/login', async (req, res, next) => {
-  const { username, password } = req.body;
-  
-  // const [ user ] = await User.findBy({ username: username });
-  
-  if(bcrypt.compareSync(password, user.password)){
-    req.session.user = user;
-    const token = generateToken(user);
-
-    res.status(200).json({
-      message: `Welcome back ${user.username}`,
-      user_id: user.user_id,
-      username: user.username,
-      role_name: user.role_name,
-      token
-    });
-  } else {
-    next({ status: 401, message: 'Invalid credentials' });
-  }
+router.post('/login', validateLoginCredentials, handleJsonWebToken, async (req, res, next) => {
+  res.status(200).json({
+    message: `welcome back ${req.user.username}`,
+    user: req.user,
+    token: req.token
+  });
 });
 
 router.get('/logout', (req, res, next) => {
-  if(req.session.user){
-    req.session.destroy((err => {
-      if(err){
-        next({ message: 'session was not destroyed'});
-      } else {
-        res.status(200).json({ message: `logged out` });
-      }
-    }))
-  } else {
-    next({ status: 200, message: 'no session' });
-  }
+  res.end();
 });
 
 router.use((err, req, res, next) => { //eslint-disable-line

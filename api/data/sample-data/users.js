@@ -36,7 +36,7 @@ const users = [
     username: 'Bowser',
     password: userHash,
     email: 'bowser@gmail.com',
-    email_confirmed: 1,
+    email_confirmed: 0,
     role_id: 1
   },
   { // 5
