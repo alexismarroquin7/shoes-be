@@ -50,9 +50,13 @@ const restricted = (req, res, next) => {
 }
 
 const handleJsonWebToken = (req, res, next) => {
-  const token = generateJsonWebToken(req.user);
-  req.token = token;
-  next();
+  try {
+    const token = generateJsonWebToken(req.user);
+    req.token = token;
+    next();
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = {

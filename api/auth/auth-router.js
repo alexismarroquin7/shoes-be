@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 const { validateLoginCredentials , handleJsonWebToken } = require('./auth-middleware');
 
 router.post('/register', async (req, res, next) => {
