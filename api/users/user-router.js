@@ -15,10 +15,10 @@ router.get('/:user_id', validateUserExistsById, async (req, res) => {
   res.status(200).json(req.user);
 });
 
-router.put('/:user_id', validateUserExistsById, validateNewUserModel, validateEmailUnique,async(req,res,next)=> {
+router.put('/:user_id', validateUserExistsById, validateNewUserModel, validateEmailUnique, async(req,res,next)=> {
   try {
-    const deletedUser = await User.deleteById(req.user.user_id);
-    res.status(200).json({ user_id: deletedUser.user_id });
+    const user = await User.updateById(req.body, req.user.user_id);
+    res.status(200).json(user);
   } catch(err){
     next(err); 
   }
