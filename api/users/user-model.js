@@ -132,7 +132,7 @@ const findBy = async filter => {
 };
 
 const create = async ({ username, email, roleName, password }) => {
-  // find role_id
+  // find corresponding role_id
   const [ role ] = await Role.findBy({ role_name: roleName });
 
   const model = {
@@ -143,8 +143,8 @@ const create = async ({ username, email, roleName, password }) => {
     password
   };
 
-  const user = await db('users as u').insert(model, ['u.user_id']);
-  console.log('./user-model', user)
+  const [ user ] = await db('users as u').insert(model, ['u.user_id']);
+  
   return findById(user.user_id);
 };
 

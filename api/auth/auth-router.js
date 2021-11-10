@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const nodemailer = require('nodemailer');
 const User = require('../users/user-model');
 const {
   validateLoginCredentials,
@@ -13,8 +14,39 @@ const {
 router.post('/register', validateNewUserModel, validateEmailUnique, handlePasswordHash, async (req, res, next) => {
   const { username, email, role } = req.body;
   try {
-    const user = await User.create({ username, email, role, password: req.hash });
-    res.status(201).json(user);
+    const user = await User.create({ username, email, roleName: role, password: req.hash });
+    
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.SUPPORT_EMAIL_USER,
+          pass: process.env.SUPPORT_EMAIL_PASS
+        }
+      });
+  
+      const mailOptions = {
+        from: process.env.SUPPORT_EMAIL_USER,
+        to: user.email,
+        subject: `[CONFIRM EMAIL] SHOES`,
+        text: "",
+        html: `
+        <div>
+          <p>Click <a href=${'link'}>here</a> to confirm your email.</p>
+          <p>If you did not sign up for this account remove your email <a href=${'link'}>here</a>.</p>
+        </div>
+        `
+      };
+  
+      await transporter.sendMail(mailOptions);
+
+    } catch(err) {
+      next(err);
+    
+    } finally {
+      res.status(201).json(user);
+    }
+
   } catch(err) {
     next(err);
   }
