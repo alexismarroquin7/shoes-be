@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
 });
 
 router.get('/:brand_id', validateBrandExistsById, (req, res) => {
-  res.status(201).json(req.brand);
+  res.status(200).json(req.brand);
 });
 
 router.post('/', validateBrandNameUnique, async (req, res, next) => {

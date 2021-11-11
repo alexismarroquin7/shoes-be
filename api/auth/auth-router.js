@@ -18,13 +18,7 @@ router.post('/register', validateNewUserModel, validateEmailUnique, handlePasswo
     const user = await User.create({ username, email, roleName: role, password: req.hash });
     
     try {
-      
-      const token = generateJsonWebToken({
-        subject: user.user_id
-      },
-      {
-        expiresIn: '1d' 
-      });
+      const token = generateJsonWebToken({ subject: user.user_id }, { expiresIn: '1d' });
 
       const url = {
         subject: `[CONFIRM EMAIL] ${process.env.NODE_ENV === 'development' ? `${process.env.REACT_APP_NETWORK_DEV_CLIENT_URL}` : `${process.env.REACT_APP_PRODUCTION_CLIENT_URL}`}`,
