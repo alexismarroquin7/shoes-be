@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../users/user-model');
 const { JWT_SECRET } = require('../../config');
-const { generateJsonWebToken } = require('../../utils');
+const { generateJsonWebTokenForUser } = require('../../utils');
 
 const validateLoginCredentials = async (req, res, next) => {
   const { email, password } = req.body;
@@ -49,9 +49,9 @@ const restricted = (req, res, next) => {
   }
 }
 
-const handleJsonWebToken = (req, res, next) => {
+const handleJsonWebTokenForUser = (req, res, next) => {
   try {
-    const token = generateJsonWebToken(req.user);
+    const token = generateJsonWebTokenForUser(req.user);
     req.token = token;
     next();
   } catch (err) {
@@ -75,9 +75,26 @@ const handlePasswordHash = (req, res, next) => {
   }
 }
 
+const validateConfirmEmailToken = (req, res, next) => {
+  if(!req.params.token){
+    res.status(401).json({ message: 'token required' });
+  
+  } else {
+    jwt.verify(req.params.token, JWT_SECRET, (err, decoded) => {
+      if(err){
+        res.status(401).json({ message: 'token invalid' });
+      } else {
+        req.decodedConfirmEmailToken = decoded;
+        next();
+      }
+    });
+  }
+};
+
 module.exports = {
   validateLoginCredentials,
   restricted,
-  handleJsonWebToken,
-  handlePasswordHash
+  handleJsonWebTokenForUser,
+  handlePasswordHash,
+  validateConfirmEmailToken
 }

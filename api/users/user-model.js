@@ -150,12 +150,18 @@ const create = async ({ username, email, roleName, password }) => {
 
 const updateById = async (changes, user_id) => {
   const oldUser = await findById(user_id);
-  const [ role ] = await Role.findBy({ role_name: changes.role });
+  let role;
+  if(changes.role){
+    [ role ] = await Role.findBy({ role_name: changes.role });
+  } else {
+    role = oldUser.role
+  }
+  
   const model = {
-    username: changes.username,
-    email: changes.email,
+    username: changes.username ? changes.username : oldUser.username,
+    email: changes.email ? changes.email : oldUser.email,
     email_confirmed: changes.email_confirmed ? boolToInt(changes.email_confirmed) : oldUser.email_confirmed,
-    password: changes.password,
+    password: changes.password ? changes.password : oldUser.password,
     role_id: role.role_id,
     created_at: oldUser.created_at,
     modified_at: db.fn.now()
